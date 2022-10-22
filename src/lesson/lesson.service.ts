@@ -1,17 +1,26 @@
-// import { Injectable } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
-import { LessonType } from './lesson.type';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Lesson } from './lesson.entity';
+import {v4 as uuid} from 'uuid';
 
-@Resolver( of => LessonType)
+
+@Injectable()
 export class LessonService {
-    @Query(returns => LessonType)
-    lesson(){
-        return {
-            id: '123asd',
-            name: 'physic',
-            startDate: (new Date()).toISOString(),
-            endDate: (new Date()).toISOString()
-        }
+    constructor(
+        @InjectRepository(Lesson)
+        private readonly lessonRepository: Repository<Lesson>
+    ){}
+
+    async createLesson(name, startDate, endDate) : Promise<Lesson>{
+        const lesson = this.lessonRepository.create({
+            name,
+            startDate,
+            endDate,
+            id: uuid(),
+        })
+
+        return await this.lessonRepository.save(lesson);
+
     }
-    
 }

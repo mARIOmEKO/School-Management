@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { LessonModule } from './lesson/lesson.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Lesson } from './lesson/lesson.entity';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       url: 'mongodb://localhost/school',
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [],
+      entities: [Lesson],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
