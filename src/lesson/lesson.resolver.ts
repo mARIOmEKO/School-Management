@@ -1,22 +1,31 @@
 // import { Injectable } from '@nestjs/common';
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CreateLessonInput } from './lesson.input';
+import { LessonService } from './lesson.service';
 import { LessonType } from './lesson.type';
-import {v4 as uuid} from 'uuid';
 
 @Resolver( of => LessonType)
 export class LessonResolver {
+    constructor(
+        private lessonService: LessonService,
+    ){}
     @Query(returns => LessonType)
-    lesson(){
-        return {
-            id: '123asd',
-            name: 'physic',
-            startDate: (new Date()).toISOString(),
-            endDate: (new Date()).toISOString()
-        }
+    lesson(
+        @Args('id') id:string,
+    ){
+        return this.lessonService.getLesson(id);
+    }
+
+    @Query(returns => [LessonType])
+    allLessons(){
+        return this.lessonService.getAllLessons()
     }
     
     @Mutation(returns => LessonType)
-    createLesson(){
+    createLesson(
+        @Args('createLessonInput') createLessonInput: CreateLessonInput,
+    ){
+        return this.lessonService.createLesson(createLessonInput);
 
     }
 }
