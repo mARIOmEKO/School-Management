@@ -11,12 +11,13 @@ export class LessonService {
     constructor(
         @InjectRepository(Lesson)
         private readonly lessonRepository: Repository<Lesson>
+    
     ){}
 
     async createLesson(createLessonInput: CreateLessonInput) : Promise<Lesson>{
         const lesson = this.lessonRepository.create({
             id: uuid(),
-            ...createLessonInput
+            ...createLessonInput,
         })
 
         return await this.lessonRepository.save(lesson);
@@ -29,5 +30,11 @@ export class LessonService {
 
     async getAllLessons() : Promise<Lesson[]>{
         return await  this.lessonRepository.find();
+     }
+
+     async assignStudentToLesson( lessonId: string, studentsIds: string[]): Promise<Lesson>{
+        const lesson = await this.lessonRepository.findOne({where: {id: lessonId}});
+        lesson.students= [...lesson.students, ...studentsIds];
+        return this.lessonRepository.save(lesson);
      }
 }

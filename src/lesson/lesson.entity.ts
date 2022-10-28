@@ -1,3 +1,4 @@
+import { IsOptional } from "class-validator";
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from "typeorm";
 
 @Entity()
@@ -16,4 +17,8 @@ export class Lesson{
 
     @Column()
     endDate: string;
+
+    @Column()
+    @IsOptional()
+    students: string[];
 }
